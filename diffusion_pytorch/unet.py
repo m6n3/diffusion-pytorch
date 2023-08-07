@@ -1,20 +1,6 @@
 import torch
 from torch import nn
 
-#      ---
-#    | PRE |
-#    | --- |
-#       |
-#       |
-#      ----
-#    | Down |
-#     -----
-#       |
-#       |------------------------------------------------------>
-#    |
-#
-
-
 class TimeEmbedding(nn.Module):
     def __init__(self, embed_dim=128):
         super().__init__()
