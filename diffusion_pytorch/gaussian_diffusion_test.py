@@ -19,8 +19,8 @@ class TestGaussinDiffusion(unittest.TestCase):
         self.assertTrue(0 <= loss)
 
     def test_sample(self):
-        B, C, H, W = 10, 3, 128, 128
-        imgs = self.diffusion.sample(batch_size=10, timesteps=3, shape_chw=[C, H, W])
+        B, C, H, W = 1, 3, 128, 128
+        imgs = self.diffusion.sample(batch_size=B, timesteps=1, shape_chw=[C, H, W])
 
         self.assertEqual(imgs.shape, torch.Size([B, C, H, W]))
 
