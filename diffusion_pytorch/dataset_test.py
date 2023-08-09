@@ -7,9 +7,7 @@ import unittest
 class TestDataset(unittest.TestCase):
     def test_creation(self):
         # `testfiles` folder has one jpg file.
-        dataset = Dataset(
-            imgs_dir="./testfiles", transforms=Dataset.default_transforms()
-        )
+        dataset = Dataset(imgs_dir="./testfiles")
 
         self.assertEqual(len(dataset), 1)
 

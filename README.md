@@ -38,7 +38,7 @@ from dataset import Dataset
 from gaussian_diffusion import GaussianDiffusion
 from unet import UNet
 
-dataset = Dataset()
+dataset = Dataset(imgs_dir='/path/to/images')
 diffusion = GaussinDiffusion(
     model=UNet(),
     max_timesteps=500

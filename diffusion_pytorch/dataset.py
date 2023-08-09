@@ -8,7 +8,9 @@ from torchvision import transforms
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, imgs_dir, transforms=None):
         self.imgs_dir = imgs_dir
-        self.transforms = transforms
+        self.transforms = (
+            transforms if transforms is not None else Dataset.default_transforms()
+        )
         self.imgs = [
             os.path.join(imgs_dir, f)
             for f in os.listdir(imgs_dir)
