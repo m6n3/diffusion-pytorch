@@ -25,7 +25,7 @@ class Trainer(object):
         )
         self.train_epochs = train_epochs
         self.train_num_steps = train_num_steps
-        self.optim = optimizer = Adam(diffusion.get_model().parameters(), lr=train_lr)
+        self.optim = Adam(diffusion.get_model().parameters(), lr=train_lr)
         self.save_every_n_steps = save_every_n_steps
         self.save_folder = save_folder
 
