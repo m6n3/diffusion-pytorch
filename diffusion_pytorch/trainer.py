@@ -1,5 +1,4 @@
-from gaussian_diffusion import GaussianDiffusion
-
+import torch
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -35,7 +34,8 @@ class Trainer(object):
         num_steps = 0
         for epoch in range(self.train_epochs):
             running_loss = 0.0
-            for idx, imgs in tqdm(self.dataloader):
+            steps_in_running_loss = 0
+            for idx, imgs in enumerate(tqdm(self.dataloader)):
                 num_steps += 1
                 if num_steps > self.train_num_steps:
                     break
@@ -43,7 +43,7 @@ class Trainer(object):
                 self.optim.zero_grad()
                 loss = self.diffusion(imgs)
                 loss.backward()
-                optim.step()
+                self.optim.step()
 
                 running_loss += loss
                 steps_in_running_loss += 1
@@ -51,12 +51,14 @@ class Trainer(object):
                 if (
                     self.save_folder
                     and (
-                        idx % self.every_n_steps == 0
-                        or num_steps == self.train_num_steps
+                        idx % self.save_every_n_steps == 0
+                        or num_steps == self.save_train_num_steps
                     )
                     and (running_loss / steps_in_running_loss) < best_loss
                 ):
-                    best_loss = running_loss / self.every_n_steps
-                    torch.save(self.diffusion.model.state_dict(), save_folder)
+                    best_loss = running_loss / steps_in_running_loss
+                    torch.save(
+                        self.diffusion.get_model().state_dict(), self.save_folder
+                    )
                     running_loss = 0.0
                     steps_in_running_loss = 0

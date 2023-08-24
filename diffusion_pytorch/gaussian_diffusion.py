@@ -12,7 +12,7 @@ class GaussianDiffusion(nn.Module):
         super().__init__()
         self.max_timesteps = max_timesteps
         self.model = model
-        self.noise_scheduler = NoiseScheduler(max_steps=max_timesteps)
+        self.noise_scheduler = NoiseScheduler(max_steps=max_timesteps + 1)
 
     def _denoise_and_add_noise(self, x, pred_noise, timesteps):
         # Do not add noise to the last step's image.
@@ -35,7 +35,7 @@ class GaussianDiffusion(nn.Module):
         return self.model
 
     def sample(self, batch_size, timesteps, shape_chw=[3, 128, 128]):
-        """Generate `batch_size` number of image"""
+        """Generate `batch_size` number of images."""
         self.model.eval()
 
         x = torch.rand([batch_size, *shape_chw])
