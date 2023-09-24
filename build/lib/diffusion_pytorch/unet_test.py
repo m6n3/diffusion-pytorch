@@ -1,4 +1,4 @@
-from diffusion_pytorch import unet
+from unet import UNet
 
 import torch
 import unittest
@@ -6,7 +6,7 @@ import unittest
 
 class TestUNet(unittest.TestCase):
     def test_basic(self):
-        model = unet.UNet()
+        model = UNet()
         B, C, H, W = 10, 3, 128, 128
         t = torch.randint(0, 100, (B, 1))
         x = torch.rand(B, C, H, W)

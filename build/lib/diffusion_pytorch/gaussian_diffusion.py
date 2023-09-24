@@ -1,4 +1,6 @@
-from diffusion_pytorch import noise_scheduler as ns
+from unet import UNet
+from noise_scheduler import NoiseScheduler
+
 
 import torch
 import torch.nn as nn
@@ -10,7 +12,7 @@ class GaussianDiffusion(nn.Module):
         super().__init__()
         self.max_timesteps = max_timesteps
         self.model = model
-        self.noise_scheduler = ns.NoiseScheduler(max_steps=max_timesteps + 1)
+        self.noise_scheduler = NoiseScheduler(max_steps=max_timesteps + 1)
 
     def _denoise_and_add_noise(self, x, pred_noise, timesteps):
         # Do not add noise to the last step's image.

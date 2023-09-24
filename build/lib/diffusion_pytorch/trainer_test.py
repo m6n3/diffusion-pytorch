@@ -1,6 +1,6 @@
-from diffusion_pytorch import gaussian_diffusion as gd
-from diffusion_pytorch import trainer as tr
-from diffusion_pytorch import unet
+from trainer import Trainer
+from unet import UNet
+from gaussian_diffusion import GaussianDiffusion
 
 import torch
 import unittest
@@ -23,9 +23,9 @@ class TestTrainer(unittest.TestCase):
         return FakeDataset(shape_chw, length)
 
     def test_train(self):
-        model = unet.UNet()
-        diffusion = gd.GaussianDiffusion(model=model, max_timesteps=10)
-        trainer = tr.Trainer(
+        model = UNet()
+        diffusion = GaussianDiffusion(model=model, max_timesteps=10)
+        trainer = Trainer(
             diffusion=diffusion,
             dataset=self._fake_dataset(),
             train_batch_size=2,

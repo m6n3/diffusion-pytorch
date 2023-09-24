@@ -1,5 +1,5 @@
-from diffusion_pytorch import gaussian_diffusion as gd
-from diffusion_pytorch import unet
+from gaussian_diffusion import GaussianDiffusion
+from unet import UNet
 
 import torch
 import unittest
@@ -8,8 +8,8 @@ import unittest
 class TestGaussinDiffusion(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.model = unet.UNet()
-        self.diffusion = gd.GaussianDiffusion(model=self.model, max_timesteps=500)
+        self.model = UNet()
+        self.diffusion = GaussianDiffusion(model=self.model, max_timesteps=500)
 
     def test_forward(self):
         B, C, H, W = 10, 3, 128, 128

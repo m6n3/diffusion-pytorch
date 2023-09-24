@@ -1,4 +1,4 @@
-from diffusion_pytorch import dataset as ds
+from dataset import Dataset
 
 import tempfile
 import unittest
@@ -7,7 +7,7 @@ import unittest
 class TestDataset(unittest.TestCase):
     def test_creation(self):
         # `testfiles` folder has one jpg file.
-        dataset = ds.Dataset(imgs_dir="./testfiles")
+        dataset = Dataset(imgs_dir="./testfiles")
 
         self.assertEqual(len(dataset), 1)
 
