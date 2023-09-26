@@ -25,9 +25,6 @@ setuptools.setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'Topic :: Scientific/Engineering :: Bio-Informatics',
-        'Topic :: Scientific/Engineering :: Information Analysis',
-        'Topic :: System :: Distributed Computing',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.8',
