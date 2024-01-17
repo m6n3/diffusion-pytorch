@@ -31,6 +31,3 @@ if __name__ == "__main__":
 
     tr.train()
 
-# Generate one image.
-# img_tensor = diffusion.sample(batch_size=1)
-# save_image(img_tensor, "img.png")
