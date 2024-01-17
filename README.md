@@ -73,7 +73,7 @@ or
 
 ```bash
 python3 -m venv myvenv
-source venv3/bin/activate
+source myvenv/bin/activate
 
 git clone https://github.com/m6n3/diffusion-pytorch.git
 cd diffusion-pytorch
@@ -82,7 +82,7 @@ python -m pip install --upgrade wheel
 python -m pip install --upgrade .
 pip install -r requirements.txt
 
-# Optional: Run all tests
+# Optional: run all the tests
 nose2 -v
 
 # Example training script (saves checkpoint at ./checkpoint.pt).

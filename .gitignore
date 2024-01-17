@@ -5,4 +5,4 @@
 *.pyc
 *.py.bak
 venv/
-venv3/
+myvenv/
