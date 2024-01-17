@@ -6,8 +6,8 @@ import unittest
 
 class TestDataset(unittest.TestCase):
     def test_creation(self):
-        # `testfiles` folder has one jpg file.
-        dataset = ds.Dataset(imgs_dir="diffusion_pytorch/testfiles")
+        # `testdata` folder has one jpg file.
+        dataset = ds.Dataset(imgs_dir="diffusion_pytorch/testdata")
 
         self.assertEqual(len(dataset), 1)
 

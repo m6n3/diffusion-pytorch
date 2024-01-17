@@ -30,7 +30,7 @@ setuptools.setup(
     ],
     test_suite="nose2.collector.collector",
     packages=setuptools.find_packages(),
-    package_data={"diffusion_pytorch": ["diffusion_pytorch/testfiles/*"]},
+    package_data={"diffusion_pytorch": ["diffusion_pytorch/testdata/*"]},
     cmdclass={
         # Command class instantiated and run during pip install scenarios.
         "build": build,
