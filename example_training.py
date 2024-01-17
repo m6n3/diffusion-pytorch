@@ -22,7 +22,7 @@ if __name__ == "__main__":
         train_epochs=4,
         train_num_steps=1_000,
         save_every_n_steps=10,
-        save_folder="./model.pt",
+        save_folder=CHECKPOINT_PATH,
     )
 
     # Start from last checkpoint (if any).
