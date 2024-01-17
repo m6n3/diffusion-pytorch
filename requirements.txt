@@ -1,2 +1,6 @@
-setuptools
 nose2
+Pillow                # PIL
+setuptools
+torch
+torchvision
+tqdm

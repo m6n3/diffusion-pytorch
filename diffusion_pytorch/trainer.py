@@ -28,6 +28,9 @@ class Trainer(object):
         self.save_every_n_steps = save_every_n_steps
         self.save_folder = save_folder
 
+    def load_checkpoint(self, checkpoint_path):
+        self.diffusion.load_checkpoint(checkpoint_path)
+
     def train(self):
         self.diffusion.get_model().train()
         best_loss = float("inf")
@@ -52,7 +55,7 @@ class Trainer(object):
                     self.save_folder
                     and (
                         idx % self.save_every_n_steps == 0
-                        or num_steps == self.save_train_num_steps
+                        or num_steps == self.save_every_n_steps
                     )
                     and (running_loss / steps_in_running_loss) < best_loss
                 ):

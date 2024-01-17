@@ -32,8 +32,11 @@ class GaussianDiffusion(nn.Module):
     def get_model(self):
         return self.model
 
-    def sample(self, batch_size, timesteps, shape_chw=[3, 128, 128]):
-        """Generate `batch_size` number of images."""
+    def load_checkpoint(self, checkpoint_path):
+        self.model.load_state_dict(torch.load(checkpoint_path))
+
+    def sample(self, batch_size, timesteps=None, shape_chw=[3, 128, 128]):
+        """Generates `batch_size` number of images."""
         self.model.eval()
 
         x = torch.rand([batch_size, *shape_chw])
