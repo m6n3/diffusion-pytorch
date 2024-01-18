@@ -16,8 +16,10 @@ class Trainer(object):
         train_num_steps=1_000_000,
         save_every_n_steps=5,
         save_folder="./model",
+        use_gpu=False
     ):
         super().__init__()
+
         self.diffusion = diffusion
         self.dataloader = DataLoader(
             dataset=dataset, batch_size=train_batch_size, shuffle=True, drop_last=True
@@ -27,6 +29,15 @@ class Trainer(object):
         self.optim = Adam(diffusion.get_model().parameters(), lr=train_lr)
         self.save_every_n_steps = save_every_n_steps
         self.save_folder = save_folder
+
+        if use_gpu:
+            assert (
+                torch.cuda.is_available()
+            ), "Error: no GPU device is available, consider setting `use_gpu` to False."
+            self.device = torch.device("cuda:0")
+        else:
+            self.device = torch.device("cpu")
+        self.diffusion.set_device_to(self.device)
 
     def load_checkpoint(self, checkpoint_path):
         self.diffusion.load_checkpoint(checkpoint_path)

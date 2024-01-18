@@ -23,6 +23,7 @@ if __name__ == "__main__":
         train_num_steps=1_000,
         save_every_n_steps=10,
         save_folder=CHECKPOINT_PATH,
+        use_gpu=True,
     )
 
     # Start from last checkpoint (if any).
@@ -30,4 +31,3 @@ if __name__ == "__main__":
         tr.load_checkpoint(CHECKPOINT_PATH)
 
     tr.train()
-

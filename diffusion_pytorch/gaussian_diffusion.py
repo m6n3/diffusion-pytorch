@@ -32,6 +32,9 @@ class GaussianDiffusion(nn.Module):
     def get_model(self):
         return self.model
 
+    def set_device_to(self, device):
+        self.model.to(device)
+
     def load_checkpoint(self, checkpoint_path):
         self.model.load_state_dict(torch.load(checkpoint_path))
 
@@ -63,7 +66,7 @@ class GaussianDiffusion(nn.Module):
         timesteps = torch.randint(self.max_timesteps + 1, (batch_size, 1))
         # timesteps: [batch_size, 1]
 
-        noisy_imgs, noises = self.noise_scheduler.noisify(imgs, timesteps=timesteps)
+        noisy_imgs, noises = self.noise_scheduler.noisify(imgs, timesteps=timesteps, device=self.device)
         # inputs_noisy, noise: [batch_size, C, H, W]
 
         pred_noises = self.model(noisy_imgs, timesteps)
