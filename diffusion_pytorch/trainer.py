@@ -16,7 +16,7 @@ class Trainer(object):
         train_num_steps=1_000_000,
         save_every_n_steps=5,
         save_folder="./model",
-        use_gpu=False
+        use_gpu=False,
     ):
         super().__init__()
 

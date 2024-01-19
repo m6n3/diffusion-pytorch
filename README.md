@@ -88,8 +88,11 @@ nose2 -v
 # Example training script (saves checkpoint at ./checkpoint.pt).
 python3 example_training.py
 
+# To run training example on Cuda.
+sed 's/use_gpu=False/use_gpu=True/g' example_training.py | python3
+
 # Example gen script (needs checkpoint at ./checkpoint.pt).
 python3 example_gen.py   # saves "img.png" into current directory.
-```
 
+```
 

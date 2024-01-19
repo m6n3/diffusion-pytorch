@@ -15,7 +15,9 @@ class TimeEmbedding(nn.Module):
     def forward(self, t):
         # t: [batch_size, 1]
 
-        tembed = self.layers(t.float())
+        device = next(self.parameters())
+
+        tembed = self.layers(t.float().to(device))
         # tembed: [batch_size, embed_dim]
 
         return tembed
@@ -26,7 +28,11 @@ class Pre(nn.Module):
     def __init__(self, in_ch, out_ch):
         super().__init__()
         self.conv = nn.Conv2d(
-            in_channels=in_ch, out_channels=out_ch, kernel_size=3, stride=1, padding=1
+            in_channels=in_ch,
+            out_channels=out_ch,
+            kernel_size=3,
+            stride=1,
+            padding=1,
         )
 
     def forward(self, x):
@@ -73,13 +79,16 @@ class ResNet(nn.Module):
 
         # Used only to adjust the channel of the residual.
         self.res_path = nn.Conv2d(
-            in_channels=in_ch, out_channels=out_ch, kernel_size=1, stride=1, padding=0
+            in_channels=in_ch,
+            out_channels=out_ch,
+            kernel_size=1,
+            stride=1,
+            padding=0,
         )
 
     def forward(self, x, tembed=None):
         # x: [batch_size, in_ch, H, W]
         # tembed: [batch_size, time_dim]
-
         h = self.forward_path(x)
         # h: [batch_size, out_ch, H, W]
 
@@ -106,13 +115,25 @@ class Attn(nn.Module):
         # Unlike the original paper (which uses a in_ch*in_ch linear transform),
         # we use Conv2d with a kernel size of 1 (a diagonal in_ch*in_ch linear transform).
         self.Q = nn.Conv2d(
-            in_channels=in_ch, out_channels=in_ch, kernel_size=1, stride=1, padding=0
+            in_channels=in_ch,
+            out_channels=in_ch,
+            kernel_size=1,
+            stride=1,
+            padding=0,
         )
         self.K = nn.Conv2d(
-            in_channels=in_ch, out_channels=in_ch, kernel_size=1, stride=1, padding=0
+            in_channels=in_ch,
+            out_channels=in_ch,
+            kernel_size=1,
+            stride=1,
+            padding=0,
         )
         self.V = nn.Conv2d(
-            in_channels=in_ch, out_channels=in_ch, kernel_size=1, stride=1, padding=0
+            in_channels=in_ch,
+            out_channels=in_ch,
+            kernel_size=1,
+            stride=1,
+            padding=0,
         )
         self.softmax = nn.Softmax(dim=-1)
         self.linear = nn.Linear(in_ch, in_ch)
@@ -188,11 +209,13 @@ class Down(nn.Module):
         # Apply attention only if input image's height (H) in listed in
         # `heights_for_attn`.
         self.heights_for_attn = heights_for_attn
-        self.resnets = [
-            ResNet(in_ch=in_ch, out_ch=out_ch, time_dim=time_dim),
-            ResNet(in_ch=out_ch, out_ch=out_ch, time_dim=time_dim),
-        ]
-        self.attns = [Attn(in_ch=out_ch), Attn(in_ch=out_ch)]
+        self.resnets = nn.ModuleList(
+            [
+                ResNet(in_ch=in_ch, out_ch=out_ch, time_dim=time_dim),
+                ResNet(in_ch=out_ch, out_ch=out_ch, time_dim=time_dim),
+            ]
+        )
+        self.attns = nn.ModuleList([Attn(in_ch=out_ch), Attn(in_ch=out_ch)])
         self.downsample = DownSample(out_ch) if add_downsampling else None
 
     def forward(self, x, temb):
@@ -248,11 +271,13 @@ class Up(nn.Module):
         self.heights_for_attn = heights_for_attn
         # in_ch is multiplied by 2 because input is concat of previous block's
         # output and matching `Down` block's output.
-        self.resnets = [
-            ResNet(in_ch=2 * in_ch, out_ch=out_ch, time_dim=time_dim),
-            ResNet(in_ch=out_ch, out_ch=out_ch, time_dim=time_dim),
-        ]
-        self.attns = [Attn(in_ch=out_ch), Attn(in_ch=out_ch)]
+        self.resnets = nn.ModuleList(
+            [
+                ResNet(in_ch=2 * in_ch, out_ch=out_ch, time_dim=time_dim),
+                ResNet(in_ch=out_ch, out_ch=out_ch, time_dim=time_dim),
+            ]
+        )
+        self.attns = nn.ModuleList([Attn(in_ch=out_ch), Attn(in_ch=out_ch)])
         self.upsample = UpSample(out_ch) if add_upsampling else None
 
     def forward(self, x, res, temb):
@@ -318,7 +343,7 @@ class UNet(nn.Module):
         num_resolutions = len(UNet.CHANNELS_DOWN_PATH)
         self.tembeding = TimeEmbedding(UNet.TIME_EMBED_DIM)
         self.pre = Pre(in_ch=UNet.ORG_CHANNEL, out_ch=UNet.CHANNELS_DOWN_PATH[0][0])
-        self.downs = []
+        self.downs = nn.ModuleList([])
         for idx, (in_ch, out_ch) in enumerate(UNet.CHANNELS_DOWN_PATH):
             self.downs.append(
                 Down(
@@ -334,7 +359,7 @@ class UNet(nn.Module):
             out_ch=UNet.CHANNELS_DOWN_PATH[-1][1],
             time_dim=UNet.TIME_EMBED_DIM,
         )
-        self.ups = []
+        self.ups = nn.ModuleList([])
         for idx, (in_ch, out_ch) in enumerate(UNet.CHANNELS_UP_PATH):
             self.ups.append(
                 Up(
@@ -350,6 +375,9 @@ class UNet(nn.Module):
     def forward(self, x, timesteps):
         # x: [batch_size, C, H, W]
         # timesteps: [batch_size, 1]
+
+        # Ensure x and timesteps are on same device.
+        timesteps.to(x.device)
 
         temb = self.tembeding(timesteps)
         # temb: [batch_size, TIME_EMBED_DIM]

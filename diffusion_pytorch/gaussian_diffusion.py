@@ -6,11 +6,12 @@ import torch.nn.functional as F
 
 
 class GaussianDiffusion(nn.Module):
-    def __init__(self, *, model, max_timesteps):
+    def __init__(self, *, model, max_timesteps, device=torch.device("cpu")):
         super().__init__()
         self.max_timesteps = max_timesteps
         self.model = model
         self.noise_scheduler = ns.NoiseScheduler(max_steps=max_timesteps + 1)
+        self.set_device_to(device)
 
     def _denoise_and_add_noise(self, x, pred_noise, timesteps):
         # Do not add noise to the last step's image.
@@ -33,6 +34,7 @@ class GaussianDiffusion(nn.Module):
         return self.model
 
     def set_device_to(self, device):
+        self.device = device
         self.model.to(device)
 
     def load_checkpoint(self, checkpoint_path):
@@ -66,7 +68,9 @@ class GaussianDiffusion(nn.Module):
         timesteps = torch.randint(self.max_timesteps + 1, (batch_size, 1))
         # timesteps: [batch_size, 1]
 
-        noisy_imgs, noises = self.noise_scheduler.noisify(imgs, timesteps=timesteps, device=self.device)
+        noisy_imgs, noises = self.noise_scheduler.noisify(
+            imgs, timesteps=timesteps, device=self.device
+        )
         # inputs_noisy, noise: [batch_size, C, H, W]
 
         pred_noises = self.model(noisy_imgs, timesteps)

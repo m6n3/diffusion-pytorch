@@ -23,7 +23,7 @@ if __name__ == "__main__":
         train_num_steps=1_000,
         save_every_n_steps=10,
         save_folder=CHECKPOINT_PATH,
-        use_gpu=True,
+        use_gpu=False,  # Set to True if cuda is available.
     )
 
     # Start from last checkpoint (if any).

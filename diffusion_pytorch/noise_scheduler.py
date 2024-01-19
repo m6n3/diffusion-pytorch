@@ -49,4 +49,4 @@ class NoiseScheduler:
         ) * noise.to(device)
         # noisified: [batch_size, C, H, W]
 
-        return noisified, noise.to(device)
+        return noisified.to(device), noise.to(device)
