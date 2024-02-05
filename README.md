@@ -1,9 +1,9 @@
 # diffusion-pytorch
-Denoising Diffusion Probabilistic Models in pytorch
+Denoising Diffusion Probabilistic Models in pytorch.
 
-todos:
-  - proper support for gpu/device
- 
+This is an instructional implementation of diffusion model, where one of the goal was ease of understanding.
+To achieve this, comprehensive comments accompany each tensor, providing information about their shape.
+Additionally, every module is equipped with a unit test.
 
 ## Usage 
 
@@ -88,11 +88,8 @@ nose2 -v
 # Example training script (saves checkpoint at ./checkpoint.pt).
 python3 example_training.py
 
-# To run training example on Cuda.
-sed 's/use_gpu=False/use_gpu=True/g' example_training.py | python3
-
 # Example gen script (needs checkpoint at ./checkpoint.pt).
 python3 example_gen.py   # saves "img.png" into current directory.
-
 ```
+
 
